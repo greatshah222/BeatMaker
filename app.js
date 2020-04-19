@@ -13,6 +13,7 @@ class Drumkit {
         this.intervalId = null;
         this.selects = document.querySelectorAll('select');
         this.muteBtns = document.querySelectorAll('.mute');
+        this.tempoSlider = document.querySelector('.tempo-slider');
     }
     activePad() {
         this.classList.toggle('active');
@@ -63,7 +64,9 @@ class Drumkit {
     //The setInterval() method, offered on the Window and Worker interfaces, repeatedly calls a function or executes a code snippet, with a fixed time delay between each call.It returns an interval ID which uniquely identifies the interval, so you can remove it later by calling clearInterval().
     start() {
         //console.log(this)
-        console.log(this.intervalId);
+        //console.log(this.bpm);
+
+        //console.log(this.intervalId);
         const interval = (60 / this.bpm) * 1000;
         // here this.isintervalId gives the random number and here we are checking if it is giving random number or not  and if it is not giving  we are implying the below function. this.intervalId is false by defalult because null is false. so if(this.intervalId) means if this.intervalId is true but we have declared this.intervalId as false so below function is invoked
         if (!this.intervalId) {
@@ -150,7 +153,25 @@ class Drumkit {
         }
     }
 
+    changeTempo(e) {
+        const tempoText = document.querySelector('.tempo-nr');
+        this.bpm = e.target.value;
+        tempoText.innerText = e.target.value;
 
+    }
+    updateTempo() {
+        clearInterval(this.intervalId);
+        this.intervalId = null;
+        const playBtn = document.querySelector('.play');
+        if (playBtn.classList.contains('active')) {
+            console.log(this.bpm);
+            this.start();
+            console.log(this.bpm);
+
+        }
+
+
+    }
 
 
 
@@ -197,3 +218,11 @@ drumkit.muteBtns.forEach(btn => {
         drumkit.mute(e);
     })
 });
+// input event happens only after the cursor is stopped. If we put the change event we will get many event because we will keep on mob´ving the cursor
+drumkit.tempoSlider.addEventListener('input', e => {
+    drumkit.changeTempo(e);
+});
+// every time there is a change in the tempo we want to stp the music 
+drumkit.tempoSlider.addEventListener('change', e => {
+    drumkit.updateTempo(e);
+})
